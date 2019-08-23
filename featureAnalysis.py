@@ -1,12 +1,11 @@
 import csv
 import numpy as np
 import scipy
-from sklearn.model_selection import train_test_split
 from sklearn import linear_model
-from sklearn.svm import SVR
 from datetime import datetime
 from dateutil.parser import parse
 import matplotlib.pyplot as plt
+from helperFunctions import printRSquared
 
 with open('data.csv', newline='') as csvfile:
     data = list(csv.reader(csvfile))
@@ -24,42 +23,60 @@ dates = features[0][1:]
 cpi = features[4][1:]
 #Long interest rate
 lir = features[5][1:]
-#Election Years
+#Business Cycle Stage
+bcs = features[9][1:]
+#Election Years and Quarter number
 elections = []
+quarter = []
 
 dataPoints = len(labels)
 
 for a in range(len(dates)):
 	year = int(parse(dates[a]).year)
+	month = int(parse(dates[a]).month)
 	if year % 4 == 0:
 		elections.append(1)
 	else:
 		elections.append(0)
+	
+	if(month < 4):
+		quarter.append(1)
+	elif(month < 7):
+		quarter.append(2)
+	elif(month < 10):
+		quarter.append(3)
+	else:
+		quarter.append(4)
 
 x = []
 xCpi = []
 xYear = []
+xBcs = []
+xElection = []
 y = []
 
-
 for a in range(dataPoints):
-	x.append([float(cpi[a]), int(parse(dates[a]).year), float(lir[a])])
+	x.append([float(cpi[a]), int(parse(dates[a]).year), quarter[a], elections[a], int(bcs[a])])
 	xCpi.append([float(cpi[a])])
 	xYear.append([int(parse(dates[a]).year)])
+	xBcs.append([int(bcs[a])])
+	xElection.append([elections[a]])
 	y.append(float(labels[a]))
 
-for i in range(5):
-    print(str(i) + ": " + str(x[i]))
+#for i in range(5):
+#    print(str(i) + ": " + str(x[i * 400]))
 
-xTrain, xTest, yTrain, yTest = train_test_split(xCpi, y, test_size=.2, random_state=42)
 
 #Options for model types are 'linear', 'poly', 'rbf'
-clf = SVR(kernel='poly', gamma='scale', C=1.0, epsilon=0.1)
-clf.fit(xTrain, yTrain)
+printRSquared(x, y, "X")
+printRSquared(xCpi, y, "CPI")
+printRSquared(xYear, y, "Year")
+printRSquared(xBcs, y, "Business Cycle")
+printRSquared(xElection, y, "Election Year")
 
-#testPrediction = clf.predict(xTest)
-print("Value of R^2: " + str(clf.score(xTest, yTest)))
 
+
+"""
 #####ATTEMPT AT GRAPHING
 fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 5), sharey=False)
 axes[0].plot(xCpi, clf.fit(xCpi, y).predict(xCpi), color='m', lw=2, label='Test')
@@ -72,4 +89,5 @@ fig.text(0.7, 0.04, 'Year', ha='center', va='center')
 fig.text(0.06, 0.5, 'S&P500 Value', ha='center', va='center', rotation='vertical')
 fig.suptitle("Support Vector Regression", fontsize=14)
 plt.show()
+"""
 
