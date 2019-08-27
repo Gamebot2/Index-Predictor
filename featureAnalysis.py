@@ -55,7 +55,7 @@ xQuarter = []
 y = []
 
 for a in range(dataPoints):
-	x.append([float(cpi[a]), int(parse(dates[a]).year), quarter[a], elections[a], int(bcs[a])])
+	x.append([int(parse(dates[a]).year), quarter[a], elections[a]])
 	xCpi.append([float(cpi[a])])
 	xYear.append([int(parse(dates[a]).year)])
 	xBcs.append([int(bcs[a])])
@@ -75,7 +75,7 @@ printRSquared(xElection, y, "Election Year", goodFeatureList)
 printRSquared(xQuarter, y, "Quarter", goodFeatureList)
 print("")
 
-print("Positive influence: " + str(goodFeatureList))
+print("Strong Positive influence: " + str(goodFeatureList))
 
 
 
