@@ -10,8 +10,6 @@ from helperFunctions import printRSquared
 with open('data.csv', newline='') as csvfile:
     data = list(csv.reader(csvfile))
 
-for i in range(1):
-    print(str(i) + ": " + str(data[i]))
 
 features=list(zip(*data))
 
@@ -53,6 +51,7 @@ xCpi = []
 xYear = []
 xBcs = []
 xElection = []
+xQuarter = []
 y = []
 
 for a in range(dataPoints):
@@ -61,18 +60,22 @@ for a in range(dataPoints):
 	xYear.append([int(parse(dates[a]).year)])
 	xBcs.append([int(bcs[a])])
 	xElection.append([elections[a]])
+	xQuarter.append([quarter[a]])
 	y.append(float(labels[a]))
+print("Elements in X: CPI, Year, Quarter, Elections, Business Cycle\n")
 
-#for i in range(5):
-#    print(str(i) + ": " + str(x[i * 400]))
+goodFeatureList = []
 
+#Options for SVR model types are 'linear', 'poly', 'rbf'
+printRSquared(x, y, "X", goodFeatureList)
+printRSquared(xCpi, y, "CPI", goodFeatureList)
+printRSquared(xYear, y, "Year", goodFeatureList)
+printRSquared(xBcs, y, "Business Cycle", goodFeatureList)
+printRSquared(xElection, y, "Election Year", goodFeatureList)
+printRSquared(xQuarter, y, "Quarter", goodFeatureList)
+print("")
 
-#Options for model types are 'linear', 'poly', 'rbf'
-printRSquared(x, y, "X")
-printRSquared(xCpi, y, "CPI")
-printRSquared(xYear, y, "Year")
-printRSquared(xBcs, y, "Business Cycle")
-printRSquared(xElection, y, "Election Year")
+print("Positive influence: " + str(goodFeatureList))
 
 
 
