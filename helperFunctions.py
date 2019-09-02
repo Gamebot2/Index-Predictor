@@ -12,6 +12,7 @@ def printRSquared(xSet, ySet, feature, list):
 	scaler.transform(xTrain)
 	scaler.transform(xTest)
 
+
 	#Creates and uses the regression model
 	#clf = SVR(kernel='linear', gamma='scale', C=1.0, epsilon=0.1)
 	clf = GradientBoostingRegressor(random_state=21, n_estimators=400)
@@ -20,4 +21,15 @@ def printRSquared(xSet, ySet, feature, list):
 	print(feature + " R^2 Avg. Value: %.3f" % scores.mean())
 	if(scores.mean() > .5):
 		list.append(feature)
+
+def predictNext(xSet, ySet, feature, predictInput):
+	xTrain, xTest, yTrain, yTest = train_test_split(xSet, ySet, test_size=.2, random_state=42)
+
+	clf = GradientBoostingRegressor(random_state=21, n_estimators=400)
+	clf.fit(xTrain, yTrain)
+
+	prediction = clf.predict(predictInput)
+	print("Prediction for " + feature + " input: " + str(prediction))
+	
+
     

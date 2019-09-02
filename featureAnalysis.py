@@ -6,6 +6,7 @@ from datetime import datetime
 from dateutil.parser import parse
 import matplotlib.pyplot as plt
 from helperFunctions import printRSquared
+from helperFunctions import predictNext
 
 with open('data.csv', newline='') as csvfile:
     data = list(csv.reader(csvfile))
@@ -76,6 +77,15 @@ printRSquared(xQuarter, y, "Quarter", goodFeatureList)
 print("")
 
 print("Strong Positive influence: " + str(goodFeatureList))
+
+yearsToPredict = []
+yearsToPredict.append(['2020'])
+yearsToPredict.append(['2021'])
+
+
+predictNext(xYear, y, "Year", yearsToPredict)
+
+print(xYear[dataPoints - 1])
 
 
 
