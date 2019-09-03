@@ -7,6 +7,11 @@ from dateutil.parser import parse
 import matplotlib.pyplot as plt
 from helperFunctions import printRSquared
 from helperFunctions import predictNext
+from helperFunctions import plotLearningCurve
+from sklearn.model_selection import ShuffleSplit
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.svm import SVR
+
 
 with open('data.csv', newline='') as csvfile:
     data = list(csv.reader(csvfile))
@@ -82,10 +87,13 @@ yearsToPredict = []
 yearsToPredict.append(['2020'])
 yearsToPredict.append(['2021'])
 
-
 predictNext(xYear, y, "Year", yearsToPredict)
 
-print(xYear[dataPoints - 1])
+title = "Learning Curve ()"
+cv = ShuffleSplit(n_splits=100, test_size=0.2, random_state=0)
+estimator = GradientBoostingRegressor()
+plotLearningCurve(estimator, title, xYear, y, ylim=(0.7, 1.01), cv=cv, n_jobs=4)
+plt.show()
 
 
 
